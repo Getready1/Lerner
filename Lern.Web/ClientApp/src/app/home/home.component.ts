@@ -22,21 +22,31 @@ export class HomeComponent implements OnInit {
       }
     ]
 
-    this.current = this.words[0]
+    this.iterator = this.getNext(this.words)
+    this.current = this.iterator.next().value
   }
   words: Noun[]
   current: Noun
   counter:number = 0
   noMore: boolean
+  iterator: IterableIterator<Noun>
 
   artikelBtnClick = ($event) => {
-    const temp: Noun = this.getNext().next().value
-    if(temp) this.current = temp
-    else this.noMore = true
+    const temp: IteratorResult<Noun> = this.iterator.next();
+
+    if(temp.done){
+      this.noMore = true
+    }else{
+      this.current = temp.value
+      this.counter++
+    }
   }
 
-  *getNext(){
-    yield this.words[++this.counter];
+  *getNext(words: Noun[]) {
+    let c: number = 0
+    while(c < words.length){
+      yield words[c++];
+    }
   }
 }
 
