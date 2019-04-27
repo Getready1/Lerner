@@ -1,0 +1,1 @@
+export function GetRanom(limit: number): number { return Math.floor(Math.random() * limit) }

@@ -10,13 +10,23 @@
   <div class="col-md-9">
     <div class="card col-sm-10 col-md-8 col-lg-6 m-auto">
       <div *ngIf="noMore">
-        <h1>!!!</h1>
+        <h1 class="text-success">You have done it. Good job</h1>
       </div>
-      <div class="card-body text-center" *ngIf="!noMore"><h1>{{current.text}}</h1></div>
-      <div id="btn-wrapper" class="row">
-        <input type="button" (click)="artikelBtnClick($event)" value="DER" class="btn btn-outlined btn-lg col-md-2">
-        <input type="button" (click)="artikelBtnClick($event)" value="DIE" class="btn btn-outlined btn-lg col-md-2">
-        <input type="button" (click)="artikelBtnClick($event)" value="DAS" class="btn btn-outlined btn-lg col-md-2">
+      <div class="card-body text-center" *ngIf="!noMore">
+        <h1><span *ngIf="showArtikel">{{getArtikel(current.artikel)}}</span> {{current.text}}</h1>
+        <div id="lights" class="col-md-6">
+          <div *ngFor="let x of lights">
+            <div class="light {{x ? 'lighted' : ''}}"></div>
+          </div>
+        </div>
+        <div id="btn-wrapper" class="row">
+          <input type="button" (click)="artikelBtnClick(buttons.der.id)" [value]="buttons.der.text"
+            class="btn btn-outlined btn-lg col-md-2" [ngClass]="{'btn-danger': buttons.der.isWrong}">
+          <input type="button" (click)="artikelBtnClick(buttons.die.id)" [value]="buttons.die.text"
+            class="btn btn-outlined btn-lg col-md-2" [ngClass]="{'btn-danger': buttons.die.isWrong}">
+          <input type="button" (click)="artikelBtnClick(buttons.das.id)" [value]="buttons.das.text"
+            class="btn btn-outlined btn-lg col-md-2" [ngClass]="{'btn-danger': buttons.das.isWrong}">
+        </div>
       </div>
     </div>
     <span>{{counter}}/3</span>

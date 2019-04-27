@@ -1,62 +1,99 @@
 import { Component, OnInit } from '@angular/core';
+import { answersNumber } from '../common/constants';
+import { Artikel, Noun } from '../common/types';
+import { GetRanom } from '../common/functions';
+import { ArtikelButtons } from './artikel-buttons';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styles: ['./home.component.css']
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.words = [
       {
         text: "Leben",
-        artikel: Artikel.das
+        artikel: Artikel.das,
+        rightAnswers: 0
       },
       {
         text: "Frau",
-        artikel: Artikel.die
+        artikel: Artikel.die,
+        rightAnswers: 0
       },
       {
         text: "Rauch",
-        artikel: Artikel.der
+        artikel: Artikel.der,
+        rightAnswers: 0
       }
     ]
 
-    this.iterator = this.getNext(this.words)
+    this.iterator = this.getNext()
     this.current = this.iterator.next().value
+    this.lights = this.lightTheLights()
+    this.showArtikel = false
   }
+  lights: boolean[]
   words: Noun[]
   current: Noun
-  counter:number = 0
+  counter: number = 0
   noMore: boolean
   iterator: IterableIterator<Noun>
+  showArtikel: boolean
+  buttons: ArtikelButtons = ArtikelButtons
 
-  artikelBtnClick = ($event) => {
-    const temp: IteratorResult<Noun> = this.iterator.next();
 
-    if(temp.done){
-      this.noMore = true
-    }else{
-      this.current = temp.value
-      this.counter++
+  getArtikel(artikelId: number): string { return Artikel[artikelId] }
+
+  artikelBtnClick = (btnId) => {
+    if (this.current.artikel != btnId) {
+      this.buttons.setFalse(btnId)
+      this.current.rightAnswers = 0
+      this.lights = this.lightTheLights()
+    }
+    else {
+      this.handleRightAnswer()
+      this.current.rightAnswers === answersNumber && this.finishWord(this.current.text)
+
+      if (this.words.length) setTimeout(this.handleWordSwitch.bind(this), 800)
+      else setTimeout(() => { this.noMore = true }, 800)
     }
   }
 
-  *getNext(words: Noun[]) {
+  handleRightAnswer() {
+    this.current.rightAnswers++;
+    this.showArtikel = true;
+    this.lights = this.lightTheLights()
+  }
+  handleWordSwitch() {
+    this.current = this.iterator.next().value
+    this.lights = this.lightTheLights()
+    this.buttons.reset()
+    this.showArtikel = false;
+  }
+
+  finishWord(word) {
+    this.words = this.words.filter(w => w.text !== word)
+    this.counter++;
+  }
+
+
+
+  *getNext() {
     let c: number = 0
-    while(c < words.length){
-      yield words[c++];
+    while (c < this.words.length) {
+      yield this.words[GetRanom(this.words.length)];
     }
   }
-}
 
-interface Noun {
-  text: string,
-  artikel: Artikel
-}
+  lightTheLights() {
+    var x = Array(answersNumber).fill(false);
 
-enum Artikel {
-  der = 1,
-  die,
-  das
+    for (var i = 0; i < this.current.rightAnswers; i++) {
+      x[i] = true;
+    }
+
+    return x;
+  }
 }

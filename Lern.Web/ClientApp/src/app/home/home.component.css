@@ -1,0 +1,16 @@
+.light {
+    width: 25px;
+    height: 25px;
+    border: 1px solid gray;
+    border-radius: 50%;
+}
+
+.lighted {
+    background-color: blue;
+}
+
+#lights {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px auto;
+}
