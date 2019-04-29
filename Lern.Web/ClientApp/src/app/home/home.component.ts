@@ -3,6 +3,7 @@ import { answersNumber } from '../common/constants';
 import { Artikel, Noun } from '../common/types';
 import { GetRanom } from '../common/functions';
 import { ArtikelButtons } from './artikel-buttons';
+import {MatCardModule} from '@angular/material/card';
 
 @Component({
   selector: 'app-home',
@@ -31,10 +32,10 @@ export class HomeComponent implements OnInit {
 
     this.iterator = this.getNext()
     this.current = this.iterator.next().value
-    this.lights = this.lightTheLights()
+    this.answerFlags = this.getAnsweredFlags()
     this.showArtikel = false
   }
-  lights: boolean[]
+  answerFlags: boolean[]
   words: Noun[]
   current: Noun
   counter: number = 0
@@ -42,15 +43,18 @@ export class HomeComponent implements OnInit {
   iterator: IterableIterator<Noun>
   showArtikel: boolean
   buttons: ArtikelButtons = ArtikelButtons
+  artikelKeys: string[] = ArtikelButtons.getArtikelKeys()
 
 
   getArtikel(artikelId: number): string { return Artikel[artikelId] }
 
   artikelBtnClick = (btnId) => {
+    this.buttons.getById(btnId).isDisabled = true;
+
     if (this.current.artikel != btnId) {
       this.buttons.setFalse(btnId)
       this.current.rightAnswers = 0
-      this.lights = this.lightTheLights()
+      this.answerFlags = this.getAnsweredFlags()
     }
     else {
       this.handleRightAnswer()
@@ -64,11 +68,11 @@ export class HomeComponent implements OnInit {
   handleRightAnswer() {
     this.current.rightAnswers++;
     this.showArtikel = true;
-    this.lights = this.lightTheLights()
+    this.answerFlags = this.getAnsweredFlags()
   }
   handleWordSwitch() {
     this.current = this.iterator.next().value
-    this.lights = this.lightTheLights()
+    this.answerFlags = this.getAnsweredFlags()
     this.buttons.reset()
     this.showArtikel = false;
   }
@@ -87,7 +91,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  lightTheLights() {
+  getAnsweredFlags() {
     var x = Array(answersNumber).fill(false);
 
     for (var i = 0; i < this.current.rightAnswers; i++) {

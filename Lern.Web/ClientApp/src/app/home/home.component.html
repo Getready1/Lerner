@@ -1,34 +1,30 @@
 <div class="row">
-  <div class="col-md-3">
-    <ul class="list-group">
-      <li class="list-group-item">123</li>
-      <li class="list-group-item">123</li>
-      <li class="list-group-item">123</li>
-      <li class="list-group-item">123</li>
-    </ul>
-  </div>
-  <div class="col-md-9">
-    <div class="card col-sm-10 col-md-8 col-lg-6 m-auto">
-      <div *ngIf="noMore">
-        <h1 class="text-success">You have done it. Good job</h1>
-      </div>
-      <div class="card-body text-center" *ngIf="!noMore">
-        <h1><span *ngIf="showArtikel">{{getArtikel(current.artikel)}}</span> {{current.text}}</h1>
-        <div id="lights" class="col-md-6">
-          <div *ngFor="let x of lights">
-            <div class="light {{x ? 'lighted' : ''}}"></div>
-          </div>
-        </div>
-        <div id="btn-wrapper" class="row">
-          <input type="button" (click)="artikelBtnClick(buttons.der.id)" [value]="buttons.der.text"
-            class="btn btn-outlined btn-lg col-md-2" [ngClass]="{'btn-danger': buttons.der.isWrong}">
-          <input type="button" (click)="artikelBtnClick(buttons.die.id)" [value]="buttons.die.text"
-            class="btn btn-outlined btn-lg col-md-2" [ngClass]="{'btn-danger': buttons.die.isWrong}">
-          <input type="button" (click)="artikelBtnClick(buttons.das.id)" [value]="buttons.das.text"
-            class="btn btn-outlined btn-lg col-md-2" [ngClass]="{'btn-danger': buttons.das.isWrong}">
-        </div>
-      </div>
-    </div>
-    <span>{{counter}}/3</span>
+  <div class="col-xl-6 col-lg-8 col-md-8 col-sm-10" id="card-wrapper">
+    <mat-card class="card">
+      <mat-card-content *ngIf="noMore; else card" class="text-center">
+        <h1>You have done it. Good job</h1>
+      </mat-card-content>
+      <ng-template #card>
+          <mat-card-content class="text-center">
+              <h1><span *ngIf="showArtikel">{{getArtikel(current.artikel)}}</span> {{current.text}}</h1>
+              <div id="lights" class="col-lg-6 col-md-8 col-sm-8">
+                <i *ngFor="let flag of answerFlags" 
+                class="material-icons {{flag ? 'checked' : 'unchecked'}}" >
+                </i>
+              </div>
+              <div id="btn-wrapper">
+                  <button
+                  class="col-3"
+                  *ngFor="let artkl of artikelKeys" 
+                  (click)="buttons[artkl].isDisabled ? '' : artikelBtnClick(buttons[artkl].id)" 
+                  [color]="buttons[artkl].isWrong ? 'warn' : ''" 
+                  mat-stroked-button>
+                  {{buttons[artkl].text}}
+                </button>
+              </div>
+          </mat-card-content>
+      </ng-template>
+      <mat-progress-bar [mode]="determinate" [value]="counter === 0 ? 0 : 100 * (counter/3)"></mat-progress-bar>
+    </mat-card>
   </div>
 </div>

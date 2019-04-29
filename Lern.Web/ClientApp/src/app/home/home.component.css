@@ -1,16 +1,35 @@
-.light {
-    width: 25px;
-    height: 25px;
-    border: 1px solid gray;
-    border-radius: 50%;
-}
-
-.lighted {
-    background-color: blue;
-}
-
 #lights {
     display: flex;
     justify-content: space-between;
     margin: 25px auto;
+}
+
+.card {
+    width: 100%;
+}
+
+#card-wrapper{
+    margin: 20px auto;
+}
+
+.material-icons {
+    color: gray;
+    font-size: 2.5em;
+}
+
+.checked:after {
+    content: 'radio_button_checked';
+    color: #3f51b5;
+}
+
+.unchecked:after {
+    content: 'radio_button_unchecked'
+}
+
+.mat-stroked-button{
+    padding: 10px 0;
+}
+
+button:disabled{
+    opacity: 1;
 }
