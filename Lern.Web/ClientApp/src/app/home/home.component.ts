@@ -3,7 +3,7 @@ import { answersNumber } from '../common/constants';
 import { Artikel, Noun } from '../common/types';
 import { GetRanom } from '../common/functions';
 import { ArtikelButtons } from './artikel-buttons';
-import {MatCardModule} from '@angular/material/card';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -12,36 +12,27 @@ import {MatCardModule} from '@angular/material/card';
 })
 export class HomeComponent implements OnInit {
   ngOnInit(): void {
-    this.words = [
-      {
-        text: "Leben",
-        artikel: Artikel.das,
-        rightAnswers: 0
-      },
-      {
-        text: "Frau",
-        artikel: Artikel.die,
-        rightAnswers: 0
-      },
-      {
-        text: "Rauch",
-        artikel: Artikel.der,
-        rightAnswers: 0
-      }
-    ]
-
-    this.iterator = this.getNext()
-    this.current = this.iterator.next().value
-    this.answerFlags = this.getAnsweredFlags()
-    this.showArtikel = false
+    this.http.get<Noun[]>('https://localhost:44374/api/word').subscribe(result => {
+      this.words = result.map<Noun>(d => ({ text: d.text, artikel: d.artikel, rightAnswers: 0}) )
+      this.iterator = this.getNext()
+      this.current = this.iterator.next().value
+      this.answerFlags= this.getAnsweredFlags()
+      this.len = result.length
+      this.loaded = true;
+    })
   }
+constructor(private http: HttpClient){
+  
+}
+  loaded: boolean = false
+  len: number
   answerFlags: boolean[]
   words: Noun[]
-  current: Noun
   counter: number = 0
   noMore: boolean
   iterator: IterableIterator<Noun>
-  showArtikel: boolean
+  current: Noun 
+  showArtikel: boolean = false
   buttons: ArtikelButtons = ArtikelButtons
   artikelKeys: string[] = ArtikelButtons.getArtikelKeys()
 
@@ -64,7 +55,6 @@ export class HomeComponent implements OnInit {
       else setTimeout(() => { this.noMore = true }, 800)
     }
   }
-
   handleRightAnswer() {
     this.current.rightAnswers++;
     this.showArtikel = true;
@@ -76,14 +66,10 @@ export class HomeComponent implements OnInit {
     this.buttons.reset()
     this.showArtikel = false;
   }
-
   finishWord(word) {
     this.words = this.words.filter(w => w.text !== word)
     this.counter++;
   }
-
-
-
   *getNext() {
     let c: number = 0
     while (c < this.words.length) {

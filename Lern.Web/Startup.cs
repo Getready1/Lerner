@@ -1,8 +1,9 @@
+using Lern.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,8 @@ namespace Lern.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddCors();
+			services.AddDbContext<LernDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 			// In production, the Angular files will be served from this directory
@@ -46,7 +49,10 @@ namespace Lern.Web
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseSpaStaticFiles();
-
+			app.UseCors(options =>
+			{
+				options.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+			});
 			app.UseMvc(routes =>
 			{
 				routes.MapRoute(

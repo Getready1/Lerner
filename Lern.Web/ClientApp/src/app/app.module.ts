@@ -7,8 +7,6 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { MatListModule, MatGridListModule } from '@angular/material';
@@ -19,8 +17,6 @@ import { MainNavComponent } from './main-nav/main-nav.component';
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     MainNavComponent
   ],
   imports: [
@@ -33,8 +29,6 @@ import { MainNavComponent } from './main-nav/main-nav.component';
     BrowserAnimationsModule,
     RouterModule.forRoot([
       { path: '', component: MainNavComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
     ])
   ],
   providers: [],

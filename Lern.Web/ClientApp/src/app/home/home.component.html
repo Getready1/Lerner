@@ -6,7 +6,7 @@
       </mat-card-content>
       <ng-template #card>
           <mat-card-content class="text-center">
-              <h1><span *ngIf="showArtikel">{{getArtikel(current.artikel)}}</span> {{current.text}}</h1>
+              <h1 *ngIf="loaded"><span *ngIf="showArtikel">{{getArtikel(current.artikel)}}</span> {{current.text}}</h1>
               <div id="lights" class="col-lg-6 col-md-8 col-sm-8">
                 <i *ngFor="let flag of answerFlags" 
                 class="material-icons {{flag ? 'checked' : 'unchecked'}}" >
@@ -24,7 +24,7 @@
               </div>
           </mat-card-content>
       </ng-template>
-      <mat-progress-bar [mode]="determinate" [value]="counter === 0 ? 0 : 100 * (counter/3)"></mat-progress-bar>
+      <mat-progress-bar [mode]="determinate" [value]="counter === 0 ? 0 : 100 * (counter/len)"></mat-progress-bar>
     </mat-card>
   </div>
 </div>
